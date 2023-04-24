@@ -19,7 +19,7 @@ const Calculator = () => {
     }]
     const [currentOrder, setCurrentOrder] = useState({})
     const [sum, setSum] = useState(0)
-    const [isOpen, setIsOpen] = useState(true)
+    const [isOpen, setIsOpen] = useState(false)
 
     function settle() {
         setIsOpen(true);
