@@ -10,16 +10,19 @@ function format(sum: number) {
 }
 
 const Calculator = () => {
-    const buttonElements = [{
+    const buttonElements: Array<{
+        name: string,
+        price: number
+    }> = [{
         name: 'Bier',
         price: process.env.NEXT_PUBLIC_BEER_PRICE ? parseInt(process.env.NEXT_PUBLIC_BEER_PRICE) : 3,
     }, {
         name: 'Pfand',
         price: process.env.NEXT_PUBLIC_DEPOSIT_PRICE ? parseInt(process.env.NEXT_PUBLIC_DEPOSIT_PRICE) : 1,
     }]
-    const [currentOrder, setCurrentOrder] = useState({})
-    const [sum, setSum] = useState(0)
-    const [isOpen, setIsOpen] = useState(false)
+    const [currentOrder, setCurrentOrder] = useState({});
+    const [sum, setSum] = useState(0);
+    const [isOpen, setIsOpen] = useState(false);
 
     function settle() {
         setIsOpen(true);
@@ -28,15 +31,17 @@ const Calculator = () => {
     return (
         <div className="h-full">
             <div className="flex flex-col h-full">
-                {buttonElements.map((buttonElement, index) => (
+                {buttonElements.map((buttonElement: { name: string, price: number }, index) => (
                     <Button key={buttonElement.name} className={BUTTON_COLORS[index]}
                             onClick={() => {
                                 setSum(sum + buttonElement.price)
                                 setCurrentOrder({
                                     ...currentOrder,
+                                    // @ts-ignore
                                     [buttonElement.name]: currentOrder[buttonElement.name] ? currentOrder[buttonElement.name] + 1 : 1
                                 })
                             }}
+                        // @ts-ignore
                     >{buttonElement.name} {currentOrder[buttonElement.name] && `(${currentOrder[buttonElement.name]})`}</Button>
                 ))}
                 <Button onClick={() => {
