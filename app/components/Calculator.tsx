@@ -25,10 +25,10 @@ type ButtonElement = {
 const Calculator = () => {
     const buttonElements: ButtonElement[] = [{
         name: 'Bier',
-        price: process.env.NEXT_PUBLIC_BEER_PRICE ? parseInt(process.env.NEXT_PUBLIC_BEER_PRICE) : 4.5,
+        price: process.env.NEXT_PUBLIC_BEER_PRICE ? parseFloat(process.env.NEXT_PUBLIC_BEER_PRICE) : 4.5,
     }, {
         name: 'Pfand',
-        price: process.env.NEXT_PUBLIC_DEPOSIT_PRICE ? parseInt(process.env.NEXT_PUBLIC_DEPOSIT_PRICE) : 3,
+        price: process.env.NEXT_PUBLIC_DEPOSIT_PRICE ? parseFloat(process.env.NEXT_PUBLIC_DEPOSIT_PRICE) : 3,
     }]
     const [currentOrder, setCurrentOrder] = useState({"Bier": 0, "Pfand": 0} as { [key: string]: number });
     const [sum, setSum] = useState(0);
