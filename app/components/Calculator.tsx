@@ -31,20 +31,36 @@ const Calculator = () => {
     return (
         <div className="h-full">
             <div className="flex flex-col h-full">
-                {buttonElements.map((buttonElement: { name: string, price: number }, index) => (
-                    <Button key={buttonElement.name} className={BUTTON_COLORS[index]}
-                            onClick={() => {
-                                setSum(sum + buttonElement.price)
-                                setCurrentOrder({
-                                    ...currentOrder,
-                                    // @ts-ignore
-                                    [buttonElement.name]: currentOrder[buttonElement.name] ? currentOrder[buttonElement.name] + 1 : 1
-                                })
-                            }}
-                        // @ts-ignore
-                    >{buttonElement.name} {currentOrder[buttonElement.name] && `(${currentOrder[buttonElement.name]})`}</Button>
+                {buttonElements.map((buttonElement: { name: string, price: number }, index) => (<div
+                        key={buttonElement.name}
+                        className="flex flex-row h-full">
+                        <Button className={`${BUTTON_COLORS[index]} opacity-80 min-w-[25%]`}
+                                disabled={!currentOrder[buttonElement.name]}
+                                onClick={() => {
+                                    setSum(sum - buttonElement.price)
+                                    setCurrentOrder({
+                                        ...currentOrder,
+                                        // @ts-ignore
+                                        [buttonElement.name]: currentOrder[buttonElement.name] ? currentOrder[buttonElement.name] - 1 : 1
+                                    })
+                                }}
+                            // @ts-ignore
+                        >-</Button>
+
+                        <Button className={`${BUTTON_COLORS[index]} grow`}
+                                onClick={() => {
+                                    setSum(sum + buttonElement.price)
+                                    setCurrentOrder({
+                                        ...currentOrder,
+                                        // @ts-ignore
+                                        [buttonElement.name]: currentOrder[buttonElement.name] ? currentOrder[buttonElement.name] + 1 : 1
+                                    })
+                                }}
+                            // @ts-ignore
+                        >{buttonElement.name} {currentOrder[buttonElement.name]}</Button>
+                    </div>
                 ))}
-                <Button onClick={() => {
+                <Button className="h-full" onClick={() => {
                     settle()
                     setIsOpen(true);
                 }}>Abrechnen ({format(sum)})</Button>
