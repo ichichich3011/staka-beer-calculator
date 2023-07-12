@@ -1,26 +1,36 @@
 'use client';
 
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Button from "@/app/components/Button";
 import {Dialog} from "@headlessui/react";
 
 
-function format(sum: number) {
-    return `${sum},00€`;
-}
+const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'EUR',
+
+    // These options are needed to round to whole numbers if that's what you want.
+    //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+    //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+});
+
+
+type ButtonElement = {
+    name: string;
+    price: number;
+    [key: string]: any;
+};
+
 
 const Calculator = () => {
-    const buttonElements: Array<{
-        name: string,
-        price: number
-    }> = [{
+    const buttonElements: ButtonElement[] = [{
         name: 'Bier',
-        price: process.env.NEXT_PUBLIC_BEER_PRICE ? parseInt(process.env.NEXT_PUBLIC_BEER_PRICE) : 3,
+        price: process.env.NEXT_PUBLIC_BEER_PRICE ? parseInt(process.env.NEXT_PUBLIC_BEER_PRICE) : 4.5,
     }, {
         name: 'Pfand',
-        price: process.env.NEXT_PUBLIC_DEPOSIT_PRICE ? parseInt(process.env.NEXT_PUBLIC_DEPOSIT_PRICE) : 1,
+        price: process.env.NEXT_PUBLIC_DEPOSIT_PRICE ? parseInt(process.env.NEXT_PUBLIC_DEPOSIT_PRICE) : 3,
     }]
-    const [currentOrder, setCurrentOrder] = useState({});
+    const [currentOrder, setCurrentOrder] = useState({"Bier": 0, "Pfand": 0} as { [key: string]: number });
     const [sum, setSum] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -28,63 +38,71 @@ const Calculator = () => {
         setIsOpen(true);
     }
 
-    return (
-        <div className="h-full">
-            <div className="flex flex-col h-full">
-                {buttonElements.map((buttonElement: { name: string, price: number }, index) => (<div
-                        key={buttonElement.name}
-                        className="flex flex-row h-full">
-                        <Button className={`${BUTTON_COLORS[index]} opacity-80 min-w-[25%]`}
-                                disabled={!currentOrder[buttonElement.name]}
-                                onClick={() => {
-                                    setSum(sum - buttonElement.price)
-                                    setCurrentOrder({
-                                        ...currentOrder,
-                                        // @ts-ignore
-                                        [buttonElement.name]: currentOrder[buttonElement.name] ? currentOrder[buttonElement.name] - 1 : 1
-                                    })
-                                }}
-                            // @ts-ignore
-                        >-</Button>
+    useEffect(() => {
+        console.log(currentOrder)
+    }, [currentOrder]);
 
-                        <Button className={`${BUTTON_COLORS[index]} grow`}
-                                onClick={() => {
-                                    setSum(sum + buttonElement.price)
-                                    setCurrentOrder({
-                                        ...currentOrder,
-                                        // @ts-ignore
-                                        [buttonElement.name]: currentOrder[buttonElement.name] ? currentOrder[buttonElement.name] + 1 : 1
-                                    })
-                                }}
-                            // @ts-ignore
-                        >{buttonElement.name} {currentOrder[buttonElement.name]}</Button>
-                    </div>
-                ))}
-                <Button className="h-full" onClick={() => {
-                    settle()
-                    setIsOpen(true);
-                }}>Abrechnen ({format(sum)})</Button>
-            </div>
-            <Dialog open={isOpen}
-                    onClose={() => {
-                        setIsOpen(false);
-                        setSum(0);
-                        setCurrentOrder({});
-                    }
-                    }
-                    className="relative z-50">
-                <div className="fixed inset-0 bg-black/30" aria-hidden="true"/>
-                <div className="fixed inset-0 flex items-center justify-center p-4">
-                    <Dialog.Panel className="bg-white px-16 py-12">
-                        <Dialog.Title>
-                            <div className="text-8xl">
-                                {format(sum)}
+    return (<>
+            <div className="h-full">
+                <div className="flex flex-col h-full">
+                    {buttonElements.map((buttonElement: { name: string, price: number }, index) => {
+                        const currentAmount = currentOrder[buttonElement.name] ? currentOrder[buttonElement.name] : 0
+                        return (<div
+                                key={buttonElement.name}
+                                className="flex flex-row h-full">
+                                <Button className={`${BUTTON_COLORS[index]} opacity-80 min-w-[25%]`}
+                                        disabled={currentAmount === 0}
+                                        onClick={() => {
+                                            setSum(sum - buttonElement.price)
+                                            setCurrentOrder({
+                                                ...currentOrder,
+                                                // @ts-ignore
+                                                [buttonElement.name]: currentOrder[buttonElement.name] ? currentOrder[buttonElement.name] - 1 : 1
+                                            })
+                                        }}
+                                    // @ts-ignore
+                                >-</Button>
+
+                                <Button className={`${BUTTON_COLORS[index]} grow`}
+                                        onClick={() => {
+                                            setSum(sum + buttonElement.price)
+                                            setCurrentOrder({
+                                                ...currentOrder,
+                                                // @ts-ignore
+                                                [buttonElement.name]: currentOrder[buttonElement.name] ? currentOrder[buttonElement.name] + 1 : 1
+                                            })
+                                        }}
+                                    // @ts-ignore
+                                >{buttonElement.name} ({currentOrder[buttonElement.name]})</Button>
                             </div>
-                        </Dialog.Title>
-                    </Dialog.Panel>
+                        )
+                    })}
+                    <Button className="h-full" onClick={() => {
+                        settle()
+                        setIsOpen(true);
+                    }}>Abrechnen ({formatter.format(sum)})</Button>
                 </div>
-            </Dialog>
-        </div>
+                <Dialog open={isOpen}
+                        onClose={() => {
+                            setIsOpen(false);
+                            setSum(0);
+                            setCurrentOrder({"Bier": 0, "Pfand": 0});
+                        }
+                        }
+                        className="relative z-50">
+                    <div className="fixed inset-0 bg-black/30" aria-hidden="true"/>
+                    <div className="fixed inset-0 flex items-center justify-center p-4">
+                        <Dialog.Panel className="bg-white px-16 py-12">
+                            <Dialog.Title>
+                                <div className="text-8xl">
+                                    {formatter.format(sum)}
+                                </div>
+                            </Dialog.Title>
+                        </Dialog.Panel>
+                    </div>
+                </Dialog>
+            </div>
+        </>
     )
 }
 
