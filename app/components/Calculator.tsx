@@ -22,14 +22,9 @@ type ButtonElement = {
 };
 
 
-const Calculator = () => {
-    const buttonElements: ButtonElement[] = [{
-        name: 'Bier',
-        price: process.env.NEXT_PUBLIC_BEER_PRICE ? parseFloat(process.env.NEXT_PUBLIC_BEER_PRICE) : 4.5,
-    }, {
-        name: 'Pfand',
-        price: process.env.NEXT_PUBLIC_DEPOSIT_PRICE ? parseFloat(process.env.NEXT_PUBLIC_DEPOSIT_PRICE) : 3,
-    }]
+const Calculator = ({articles} : {articles: [{name: string, price: number}]}) => {
+    // @ts-ignore
+    const buttonElements: ButtonElement[] = articles
     const [currentOrder, setCurrentOrder] = useState({"Bier": 0, "Pfand": 0} as { [key: string]: number });
     const [sum, setSum] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
@@ -50,7 +45,7 @@ const Calculator = () => {
                         return (<div
                                 key={buttonElement.name}
                                 className="flex flex-row h-full">
-                                <Button className={`${BUTTON_COLORS[index]} opacity-80 min-w-[25%]`}
+                                <Button className={`${BUTTON_COLORS[index % (BUTTON_COLORS.length)]} opacity-80 min-w-[25%]`}
                                         disabled={currentAmount === 0}
                                         onClick={() => {
                                             setSum(sum - buttonElement.price)
@@ -63,7 +58,7 @@ const Calculator = () => {
                                     // @ts-ignore
                                 >-</Button>
 
-                                <Button className={`${BUTTON_COLORS[index]} grow`}
+                                <Button className={`${BUTTON_COLORS[index % (BUTTON_COLORS.length)]} grow`}
                                         onClick={() => {
                                             setSum(sum + buttonElement.price)
                                             setCurrentOrder({
@@ -77,7 +72,7 @@ const Calculator = () => {
                             </div>
                         )
                     })}
-                    <Button className="h-full" onClick={() => {
+                    <Button className="h-full bg-white text-black" onClick={() => {
                         settle()
                         setIsOpen(true);
                     }}>Abrechnen ({formatter.format(sum)})</Button>
