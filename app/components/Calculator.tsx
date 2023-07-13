@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import Button from "@/app/components/Button";
 import {Dialog} from "@headlessui/react";
 
@@ -25,7 +25,10 @@ type ButtonElement = {
 const Calculator = ({articles} : {articles: [{name: string, price: number}]}) => {
     // @ts-ignore
     const buttonElements: ButtonElement[] = articles
-    const [currentOrder, setCurrentOrder] = useState({"Bier": 0, "Pfand": 0} as { [key: string]: number });
+    const defaultOrder = buttonElements.reduce((acc, buttonElement) => {
+        return {...acc, [buttonElement.name]: 0}
+    }, {})
+    const [currentOrder, setCurrentOrder] = useState(defaultOrder as { [key: string]: number });
     const [sum, setSum] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -77,7 +80,7 @@ const Calculator = ({articles} : {articles: [{name: string, price: number}]}) =>
                         onClose={() => {
                             setIsOpen(false);
                             setSum(0);
-                            setCurrentOrder({"Bier": 0, "Pfand": 0});
+                            setCurrentOrder(defaultOrder);
                         }
                         }
                         className="relative z-50">
