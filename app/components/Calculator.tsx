@@ -33,10 +33,6 @@ const Calculator = ({articles} : {articles: [{name: string, price: number}]}) =>
         setIsOpen(true);
     }
 
-    useEffect(() => {
-        console.log(currentOrder)
-    }, [currentOrder]);
-
     return (<>
             <div className="h-full">
                 <div className="flex flex-col h-full">

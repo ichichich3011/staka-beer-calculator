@@ -12,11 +12,10 @@ export default function Page({
     searchParams: { [key: string]: string | string[] | undefined }
 }) {
 
-    console.log(searchParams)
     //create an array of objects from search params
     const articles = Object.keys(searchParams).map((key) => {
         const price = searchParams[key]
-        if (typeof price ===  'string') {
+        if (typeof price === 'string') {
             return {name: key, price: parseFloat(price)}
         }
     })
