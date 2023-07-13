@@ -89,7 +89,7 @@ const Calculator = ({articles} : {articles: [{name: string, price: number}]}) =>
                     <div className="fixed inset-0 flex items-center justify-center p-4">
                         <Dialog.Panel className="bg-white px-16 py-12">
                             <Dialog.Title>
-                                <div className="text-8xl">
+                                <div className="text-8xl text-black">
                                     {formatter.format(sum)}
                                 </div>
                             </Dialog.Title>
