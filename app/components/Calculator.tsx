@@ -21,10 +21,6 @@ type ButtonElement = {
     [key: string]: any;
 };
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
-
 
 const Calculator = ({articles} : {articles: [{name: string, price: number}]}) => {
     // @ts-ignore
