@@ -24,10 +24,15 @@ type ButtonElement = {
 
 function playSound() {
     const audio = new Audio('/openBeer.mp3');
-    audio.play();
+    const audio2 = new Audio('/beerpour.mp3');
+    audio.play().then(() => {
+        setTimeout(() => {
+            audio2.play();
+        }, 1000)
+    });
 }
 
-const Calculator = ({articles} : {articles: [{name: string, price: number}]}) => {
+const Calculator = ({articles}: { articles: [{ name: string, price: number }] }) => {
     // @ts-ignore
     const buttonElements: ButtonElement[] = articles
     const defaultOrder = buttonElements.reduce((acc, buttonElement) => {
@@ -49,16 +54,17 @@ const Calculator = ({articles} : {articles: [{name: string, price: number}]}) =>
                         return (<div
                                 key={buttonElement.name}
                                 className="flex flex-row h-full">
-                                <Button className={`${BUTTON_COLORS[index % (BUTTON_COLORS.length)]} opacity-80 min-w-[25%]`}
-                                        disabled={currentAmount === 0}
-                                        onClick={() => {
-                                            setSum(sum - buttonElement.price)
-                                            setCurrentOrder({
-                                                ...currentOrder,
-                                                // @ts-ignore
-                                                [buttonElement.name]: currentOrder[buttonElement.name] ? currentOrder[buttonElement.name] - 1 : 1
-                                            })
-                                        }}
+                                <Button
+                                    className={`${BUTTON_COLORS[index % (BUTTON_COLORS.length)]} opacity-80 min-w-[25%]`}
+                                    disabled={currentAmount === 0}
+                                    onClick={() => {
+                                        setSum(sum - buttonElement.price)
+                                        setCurrentOrder({
+                                            ...currentOrder,
+                                            // @ts-ignore
+                                            [buttonElement.name]: currentOrder[buttonElement.name] ? currentOrder[buttonElement.name] - 1 : 1
+                                        })
+                                    }}
                                     // @ts-ignore
                                 >-</Button>
 
