@@ -23,9 +23,6 @@ type ButtonElement = {
 
 const audio = new Audio('/beerOpenAndPour.mp3');
 
-function playSound() {
-    audio.play();
-}
 
 const Calculator = ({articles}: { articles: [{ name: string, price: number }] }) => {
     // @ts-ignore
@@ -78,13 +75,15 @@ const Calculator = ({articles}: { articles: [{ name: string, price: number }] })
                         )
                     })}
                     <Button className="h-full bg-white text-black" onClick={() => {
-                        playSound();
+                        audio.play();
                         settle()
                         setIsOpen(true);
                     }}>Abrechnen ({formatter.format(sum)})</Button>
                 </div>
                 <Dialog open={isOpen}
                         onClose={() => {
+                            audio.pause();
+                            audio.currentTime = 0;
                             setIsOpen(false);
                             setSum(0);
                             setCurrentOrder(defaultOrder);
