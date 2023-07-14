@@ -21,10 +21,10 @@ type ButtonElement = {
     [key: string]: any;
 };
 
+const audio = new Audio('/openBeer.mp3');
+const audio2 = new Audio('/beerpour.mp3');
 
 function playSound() {
-    const audio = new Audio('/openBeer.mp3');
-    const audio2 = new Audio('/beerpour.mp3');
     audio.play().then(() => {
         setTimeout(() => {
             audio2.play();
