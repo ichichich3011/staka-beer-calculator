@@ -21,15 +21,10 @@ type ButtonElement = {
     [key: string]: any;
 };
 
-const audio = new Audio('/openBeer.mp3');
-const audio2 = new Audio('/beerpour.mp3');
+const audio = new Audio('/beerOpenAndPour.mp3');
 
 function playSound() {
-    audio.play().then(() => {
-        setTimeout(() => {
-            audio2.play();
-        }, 1000)
-    });
+    audio.play();
 }
 
 const Calculator = ({articles}: { articles: [{ name: string, price: number }] }) => {
