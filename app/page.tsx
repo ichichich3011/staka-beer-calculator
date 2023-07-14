@@ -12,6 +12,13 @@ export default function Page({
     searchParams: { [key: string]: string | string[] | undefined }
 }) {
 
+    let playSound = false;
+    if (searchParams) {
+        // @ts-ignore
+        playSound = searchParams.playSound === 'true'
+        // @ts-ignore
+        delete searchParams.playSound;
+    }
     //create an array of objects from search params
     const articles = Object.keys(searchParams).map((key) => {
         const price = searchParams[key]
@@ -21,6 +28,6 @@ export default function Page({
     })
 
     // @ts-ignore
-    return <Calculator articles={articles}/>
+    return <Calculator articles={articles} playSound={playSound}/>
 
 }
