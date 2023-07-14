@@ -22,6 +22,11 @@ type ButtonElement = {
 };
 
 
+function playSound() {
+    const audio = new Audio('/openBeer.mp3');
+    audio.play();
+}
+
 const Calculator = ({articles} : {articles: [{name: string, price: number}]}) => {
     // @ts-ignore
     const buttonElements: ButtonElement[] = articles
@@ -72,6 +77,7 @@ const Calculator = ({articles} : {articles: [{name: string, price: number}]}) =>
                         )
                     })}
                     <Button className="h-full bg-white text-black" onClick={() => {
+                        playSound();
                         settle()
                         setIsOpen(true);
                     }}>Abrechnen ({formatter.format(sum)})</Button>
