@@ -1,5 +1,3 @@
-const sendmail = require('sendmail')();
-
 export const runtime = 'edge'; // 'nodejs' is the default
 
 export async function GET(request: Request) {
@@ -32,27 +30,19 @@ export async function GET(request: Request) {
 
     const data = JSON.parse(result)
     const filtered = data.availabilities.filter((item: any) => item.hasOwnProperty('availableForHomeDelivery'))
-    console.log('availableForHomeDelivery', filtered[0].availableForHomeDelivery)
-    if (filtered[0].availableForHomeDelivery) {
-        sendmail({
-            from: 'no-reply@yourdomain.com',
-            to: 'ikea-lampen-verfügbarkeit@nevergonnahappen.de',
-            subject: 'Lampe verfügbar',
-            html: '<a href="https://www.ikea.com/de/de/p/varmblixt-tisch-wandleuchte-led-orange-glas-rund-80499199/">LAMPE IST VERFÜGBAR</a>'
-        }, function(err, reply) {
-            console.log(err && err.stack);
-            console.dir(reply);
-        });
-    }else{
-        sendmail({
-            from: 'no-reply@yourdomain.com',
-            to: 'ikea-lampen-verfügbarkeit@nevergonnahappen.de',
-            subject: 'Lampe NICHT verfügbar',
-            html: '<a href="https://www.ikea.com/de/de/p/varmblixt-tisch-wandleuchte-led-orange-glas-rund-80499199/">LAMPE IST NICHT VERFÜGBAR</a>'
-        }, function(err, reply) {
-            console.log(err && err.stack);
-            console.dir(reply);
-        });
-    }
+
+    fetch(`/send-mail?availibility=${filtered[0].availableForHomeDelivery}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    }).then((res) => {
+            console.log('Response received')
+            if (res.status === 200) {
+                console.log('Response succeeded!')
+            }
+
+        }
+    )
     return Response.json(filtered)
 }
