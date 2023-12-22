@@ -31,7 +31,7 @@ export async function GET(request: Request) {
     const data = JSON.parse(result)
     const filtered = data.availabilities.filter((item: any) => item.hasOwnProperty('availableForHomeDelivery'))
 
-    fetch(`/send-mail?availibility=${filtered[0].availableForHomeDelivery}`, {
+    fetch(`${process.env.BASE_URL}/api/send-mail?availibility=${filtered[0].availableForHomeDelivery}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
