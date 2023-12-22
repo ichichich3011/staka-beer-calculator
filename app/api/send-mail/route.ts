@@ -14,9 +14,11 @@ export async function GET(request: Request) {
         html: `<a href="https://www.ikea.com/de/de/p/varmblixt-tisch-wandleuchte-led-orange-glas-rund-80499199/">
                     LAMPE IST ${!isAvailable ? "NICHT" : ""} VERFÜGBAR
                 </a>`
+        // @ts-ignore
     }, function (err, reply) {
         console.log(err && err.stack);
         console.dir(reply);
     });
+    // @ts-ignore
     return Response.json({success: true})
 }
